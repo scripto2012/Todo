@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +7,7 @@
     <title>TodoApp</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'TodoApp/style.css' %}">
 </head>
 <body class = "bg-light">
     <div class="container">
@@ -12,10 +15,45 @@
             <div class="col-md-8 offset-md-2">
                 <div class="card">
                     <div class="card-header shadow-sm bg-white">
-                        <h1 class="display-5 text-info" align="center"><i class="fas fa-bolt"></i> TodoApp</h1>
+                        <h1 class="display-5 text-info" align="center"><i class="fas fa-clipboard-list"></i> TodoApp</h1>
                     </div>
                     <div class="card-body">
 
+                        <ul class="list-group">
+                            <li class="list-group">
+                                <form action="{% url 'insert_todo_item' %}" method="post" autocomplete="off">
+                                    {% csrf_token %}
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="content">
+                                        <div class="input-group-append text-info">
+                                            <span class="input-group-text bg-white py-0">
+                                                <button type="submit" class="btn btn-sm text-info">
+                                                    <i class="fa fa-plus-circle fa-lg"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </li>
+
+                            {% for todo in todo_list %}
+                                <li class="list-group-item">{{todo.content}}
+
+                                <form action="{% url 'delete_todo_item' todo.id %}" method="post" class="float-right d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn">
+                                        <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
+                                    </button>
+                                </form>
+
+                                </li>
+                            {% empty %}
+                                <li class="list-group-item">
+                                    <span class="font-italic">No todo item found</span>
+                                </li>
+                            {% endfor %}
+
+                        </ul>
                     </div>
                 </div>
             </div>
